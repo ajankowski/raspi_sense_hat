@@ -5,11 +5,9 @@ import time
 import paho.mqtt.client as paho
 from tinydb import TinyDB, Query
 import datetime
+import json
 
-db = TinyDB('dane.json')
-
-#import json
-
+db = TinyDB('/home/pi/Documents/Python/dane.json')
 
 sense = SenseHat()
 
@@ -22,9 +20,9 @@ client.connect('192.168.1.150', 1883)
 
 def on_publish(client, userdata, mid):
     print('mid:'+str(mid))
+    print(info)
     
 client.on_publish = on_publish
-
         
 client.loop_start()         
  
@@ -39,14 +37,10 @@ while True:
     
     info = "Temperature = %s, Pressure = %s, Humidity = %s"%(t, p, h)
     
-    #sense.show_message(info, scroll_speed = 0.05)
-    
-    print(info)    
-          
+    #sense.show_message(info, scroll_speed = 0.05)    
+     
     client.publish('/andrzej/sensorki', str(info))
     
     db.insert({'datetime': str(datetime.datetime.now()), "temperature":t})
     
     time.sleep(5)
-    
-    
